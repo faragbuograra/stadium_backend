@@ -10,7 +10,7 @@ import { raw } from "objection";
 import moment from "moment";
 import Management from "../Modules/Management/management.model";
 import Procurement from "../Modules/Procurement/procurement.model";
-import Companies from "../Modules/Companies/companies.model";
+import Companies from "../Modules/Match/match.model";
 
 
 export const GetStatics = async (

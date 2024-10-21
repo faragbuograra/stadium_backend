@@ -93,7 +93,7 @@ export class UtilDatabase {
         let to: number;
         let fraction: number;
 
-        if (!paginate) paginate = 12;
+        if (!paginate) paginate = 10;
 
         if (!page || page <= 1) {
             page   = 1;

@@ -21,12 +21,22 @@ export const UserRoutes = (router: Router, prefix: string) => {
 export const AdminUserRoutes = (router: Router, prefix: string) => {
 
     // TODO: add insert, update and delete users to admin
-
+    router
+    .route(`${prefix}/Players`)
+    .get(
+        AdminUserController.Players
+    )
+    router
+    .route(`${prefix}/MStadium`)
+    .get(
+        AdminUserController.MStadium
+    )
     router
         .route(`${prefix}/users`)
         .get(
             AdminUserController.index
         )
+      
     .post(
         Multer.none,
         AdminUserController.store

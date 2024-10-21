@@ -5,10 +5,6 @@ import * as jsonwebtoken                  from "jsonwebtoken"
 import { DOMAIN, JWT_EXPIRY, JWT_SECRET } from '../../config'
 
 import { TimestampedModel }               from '../Shared/TimestampedModel'
-import { type } from 'node:os'
-import Role from '../Role/role.model'
-import Department from '../Department/department.model'
-import Management from '../Management/management.model'
 
 export class User extends TimestampedModel {
   
@@ -141,32 +137,6 @@ export class User extends TimestampedModel {
      * ---------------------------------------------------------------------
      */
     static relationMappings = () => ({
-        role: {
-            relation: Model.HasOneRelation,
-            modelClass: Role,
-            join: {
-                from: 'user.role_id',
-             to: 'role.id'
-            },
-            filter: (qb: QueryBuilderType<Role>) => qb.select('role.name')
-        },
-        department: {
-            relation: Model.HasOneRelation,
-            modelClass: Department,
-            join: {
-                from: 'user.department_id',
-             to: 'department.id'
-            },
-            filter: (qb: QueryBuilderType<Department>) => qb.select('department.name')
-        },
-        management: {
-            relation:  Model.HasOneRelation,
-            modelClass: Management,
-            join: {
-                from: 'user.management_id',
-             to: 'management.id'
-            },
-            filter: (qb: QueryBuilderType<Management>) => qb.select('management.name')
-        },
+    
     })
 }

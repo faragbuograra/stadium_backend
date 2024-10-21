@@ -20,7 +20,7 @@ import { GetStatics } from "./statistics.route";
 import { AdminManagementRoutes } from "../Modules/Management/management.routes";
 import { AdminProcurementRoutes } from "../Modules/Procurement/procurement.routes";
 import { AdminProcurementhistoryRoutes } from "../Modules/Procurementhistory/procurementhistory.routes";
-import { AdminCompaniesRoutes } from "../Modules/Companies/companies.routes";
+import { AdminMatchRoutes } from "../Modules/Match/match.routes";
 import { AdminTypeRoutes } from "../Modules/Types/type.routes";
 import { AdminOrderRoutes } from "../Modules/Orders/order.routes";
 import { AdminOrder_procurementRoutes } from "../Modules/Order_procurement/order_procurement.routes";
@@ -97,7 +97,7 @@ export const applyRoutes = (): Router => {
   AdminOrderRoutes(router, admin_prefix)
   AdminOrder_procurementRoutes(router, admin_prefix)
   AdminTypeRoutes(router, admin_prefix)
-  AdminCompaniesRoutes(router, admin_prefix)
+  AdminMatchRoutes(router, admin_prefix)
   AdminProcurementhistoryRoutes(router, admin_prefix)
   AdminUserRoutes(router, admin_prefix);
   AdminProcurementRoutes(router, admin_prefix);

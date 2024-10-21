@@ -4,11 +4,12 @@ import { DOMAIN }                             from "../../config"
 
 import { TimestampedModel }                   from '../Shared/TimestampedModel'
 import { User } from '../Users/user.model'
+import Stadium from '../stadium/stadium.model'
 
-export default class Companies extends TimestampedModel {
+export default class Match extends TimestampedModel {
 
     // Table name
-    static tableName = 'companies'
+    static tableName = 'match'
     static defaultSort = 'name'
 
     // Table columns
@@ -40,11 +41,21 @@ export default class Companies extends TimestampedModel {
             relation: Model.HasOneRelation,
             modelClass: User,
             join: {
-                from: 'companies.user_id',
+                from: 'match.user_id',
                 to: 'user.id' 
             },
             filter: (qb: QueryBuilderType<User>) => qb.select('user.name')
         },
+        stadium: {
+            relation: Model.HasOneRelation,
+            modelClass: Stadium,
+            join: {
+                from: 'match.stadium_id',
+                to: 'stadium.id' 
+            },
+            filter: (qb: QueryBuilderType<Stadium>) => qb.select('stadium.name')
+        },
+       
        
        
 

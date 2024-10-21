@@ -1,19 +1,19 @@
  import { NextFunction, Request, Response } from 'express'
 import path                                from 'path'
 import { UPLOADS_PATH }                    from '../../config'
-import Companies                               from './companies.model'
+import Match                               from './match.model'
 import { unlink }                          from 'node:fs/promises';
 import { UtilDatabase }                    from '../../Utils/finder'
 
-export const AdminCompaniesController = {
+export const AdminMatchController = {
 
     //index
     index: async (req: Request, res: Response, next: NextFunction) => {
 
-        let query = Companies.query()
-        .withGraphFetched('user')
+        let query = Match.query()
+        .withGraphFetched('[user,stadium]') 
         return await UtilDatabase
-            .finder(Companies, req.query, query)
+            .finder(Match, req.query, query)
             
             .then((results) => res.json(results))
             .catch(err => next(err))
@@ -24,12 +24,12 @@ export const AdminCompaniesController = {
         var data = req.body
         const img  = req.file
 
-        const trx = await Companies.startTransaction()
+        const trx = await Match.startTransaction()
       
         try {
           data.user_id = req.user.id
        
-            await Companies
+            await Match
                 .query(trx)
                 .insert(data)
                 .then((result) => res.json(result))
@@ -56,7 +56,7 @@ export const AdminCompaniesController = {
         const { id } = req.params
         const img  = req.file
    
-        const trx = await Companies.startTransaction()
+        const trx = await Match.startTransaction()
 
         try {
             // store file
@@ -65,16 +65,16 @@ export const AdminCompaniesController = {
                 data.img = img.filename
                 console.log(data)
             }
-        await Companies
+        await Match
             .query(trx)
             .patchAndFetchById(id, data)
-            .throwIfNotFound({ message: 'Companies not found!' })
+            .throwIfNotFound({ message: 'Match not found!' })
             .then((result) => res.json(result))
             await trx.commit()
         } catch (err) {
             // Delete file
             if (img) {
-                const img_path = path.resolve(UPLOADS_PATH, 'Companiess', img.filename)
+                const img_path = path.resolve(UPLOADS_PATH, 'Matchs', img.filename)
                 await unlink(img_path);
 
                 console.log(`successfully deleted ${ img_path }`);
@@ -95,10 +95,10 @@ export const AdminCompaniesController = {
 
         const { id } = req.params
 console.log(id)
-        await Companies
+        await Match
             .query()
             .deleteById(id)
-            .throwIfNotFound({ message: 'Companies not found!' })
+            .throwIfNotFound({ message: 'Match not found!' })
             .returning('*')
             .then((result) => res.json(result))
             .catch(err => next(err))

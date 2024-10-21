@@ -47,7 +47,6 @@ console.log(
                         message: 'logged in',
                         role: result.role,
                         token: result.$genToken(),
-                        management_id:result.management_id,
                     })
             } else {
                 throw new ValidationError({

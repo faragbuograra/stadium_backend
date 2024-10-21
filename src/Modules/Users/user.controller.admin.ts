@@ -10,14 +10,28 @@ export const AdminUserController = {
    */
   index: async (req: Request, res: Response, next: NextFunction) => {
     let query = User.query()
-      // .withGraphFetched(`[role,department,management]`)
-  
+    .where('role', 'admin')
 
     return await UtilDatabase.finder(User, req.query, query)
       .then((results) => res.json(results))
       .catch((err) => next(err));
   },
+  Players: async (req: Request, res: Response, next: NextFunction) => {
+    let query = User.query()
+    .where('role', 'player')
 
+    return await UtilDatabase.finder(User, req.query, query)
+      .then((results) => res.json(results))
+      .catch((err) => next(err));
+  },
+  MStadium: async (req: Request, res: Response, next: NextFunction) => {
+    let query = User.query()
+    .where('role', 'mstadium')
+
+    return await UtilDatabase.finder(User, req.query, query)
+      .then((results) => res.json(results))
+      .catch((err) => next(err));
+  },
   /**
    * ---------------------------------------------------------------------
    * View a single model
@@ -38,7 +52,7 @@ export const AdminUserController = {
    * ---------------------------------------------------------------------
    */
   store: async (req: Request, res: Response, next: NextFunction) => {
-    await validateUser(req, res);
+   
 
     await User.query()
       .insert(req.body)
@@ -74,37 +88,3 @@ export const AdminUserController = {
   }
 };
 
-async function validateUser(req: Request, res: Response) {
-  let errors: any = [];
-  if (req.body.username) {
-    const user = await User.query().findOne({ username: req.body.username });
-    if (user) {
-      errors.push({ username: `The username ${req.body.username} is already exist` });
-    }
-  } else {
-    errors.push({ username: `The username is required` });
-  }
- 
-  if (req.body.password) {
-  } else {
-    errors.push({ password: `The password is required` });
-  }
-  if (req.body.management_id) {
-  } else {
-    errors.push({ management_id: `The management_id is required` });
-  }
-  let errorsObject = {};
-
-  errors.forEach(error => {
-      for (let field in error) {
-          errorsObject[field] = error[field];
-      }
-  });
-
-  if (errors.length > 0) {
-    return res.status(400).json({
-      errors: errorsObject,
-      message: "Validation error",
-    });
-  }
-}
