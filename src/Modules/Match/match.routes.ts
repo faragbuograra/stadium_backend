@@ -13,7 +13,11 @@ import { AdminMatchController } from './match.controller.admin'
 export const AdminMatchRoutes = (router: Router, prefix: string) => {
 
     // TODO: add insert, update and delete to admin
-
+    router
+    .route(`${ prefix }/myMatch`)  // domain:8000/api/v1/admin/categorys
+    .get(
+        AdminMatchController.me
+    )
     router
         .route(`${ prefix }/Match`)  // domain:8000/api/v1/admin/categorys
         .get(

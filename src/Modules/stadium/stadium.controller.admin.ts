@@ -30,6 +30,7 @@ export const AdminStadiumController = {
 
         
           data.status=true
+          data.user_id=req.user.id
             await Stadium
                 .query(trx)
                 .insert(data)

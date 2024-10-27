@@ -5,7 +5,7 @@ const table_name = 'match'
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable(table_name, (table) => {
         table.increments('id').primary()
-        table.string('day').nullable().unique()
+        table.string('day').nullable()
         table.string('time').nullable()
         table.boolean('status').defaultTo(true).notNullable()
         table

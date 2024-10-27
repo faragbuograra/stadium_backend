@@ -1,19 +1,19 @@
  import { NextFunction, Request, Response } from 'express'
 import path                                from 'path'
 import { UPLOADS_PATH }                    from '../../config'
-import Match                               from './match.model'
+import RequstPlayer                               from './RequstPlayer.model'
 import { unlink }                          from 'node:fs/promises';
 import { UtilDatabase }                    from '../../Utils/finder'
 import { isBefore, parseISO } from 'date-fns';
-export const AdminMatchController = {
+export const AdminRequstPlayerController = {
 
     //index
     index: async (req: Request, res: Response, next: NextFunction) => {
 
-        let query = Match.query()
+        let query = RequstPlayer.query()
         .withGraphFetched('[user,stadium]') 
         return await UtilDatabase
-            .finder(Match, req.query, query)
+            .finder(RequstPlayer, req.query, query)
             
             .then((results) => res.json(results))
             .catch(err => next(err))
@@ -21,11 +21,11 @@ export const AdminMatchController = {
     },
     me: async (req: Request, res: Response, next: NextFunction) => {
 
-        let query = Match.query()
+        let query = RequstPlayer.query()
         .where('user_id', req.user.id)
         .withGraphFetched('[user,stadium]') 
         return await UtilDatabase
-            .finder(Match, req.query, query)
+            .finder(RequstPlayer, req.query, query)
             
             .then((results) => res.json(results))
             .catch(err => next(err))
@@ -33,34 +33,30 @@ export const AdminMatchController = {
     },
     store: async (req: Request, res: Response, next: NextFunction) => {
         const data = req.body;
-        const trx = await Match.startTransaction();
+        const trx = await RequstPlayer.startTransaction();
       
         try {
           // إضافة user_id إلى البيانات
           data.user_id = req.user.id;
       
           // التحقق من اليوم والوقت
-          const matchDateTime = parseISO(`${data.day}T${data.time}`);
+          const RequstPlayerDateTime = parseISO(`${data.day}T${data.time}`);
           const now = new Date();
       
-          if (isBefore(matchDateTime, now)) {
+          if (isBefore(RequstPlayerDateTime, now)) {
             return res.status(400).json({
               message: 'لا يمكن حجز مباراة بتاريخ أو وقت سابق. يرجى اختيار موعد آخر.',
             });
           }
-          const existingMatch = await Match.query(trx)
-          .where('day', data.day)
-          .andWhere('time', data.time)
-          .andWhere('stadium_id', data.stadium_id)
-          .first();
-    
-        if (existingMatch) {
-          return res.status(400).json({
-            message: 'يوجد مباراة محجوزة في نفس اليوم والوقت في هذا الملعب. يرجى اختيار موعد آخر.',
-          });
-        }
+     
+       
           // إدراج البيانات في قاعدة البيانات
-          const result = await Match.query(trx).insert(data);
+          const result = await RequstPlayer.query(trx).insert({
+            match_id: data?.match_id,
+            user_id: data?.user_id,
+            number_of_players: data?.number_of_players,
+
+          });
       
           // تأكيد المعاملة
           await trx.commit();
@@ -86,7 +82,7 @@ export const AdminMatchController = {
         const { id } = req.params
         const img  = req.file
    
-        const trx = await Match.startTransaction()
+        const trx = await RequstPlayer.startTransaction()
 
         try {
             // store file
@@ -95,16 +91,16 @@ export const AdminMatchController = {
                 data.img = img.filename
                 console.log(data)
             }
-        await Match
+        await RequstPlayer
             .query(trx)
             .patchAndFetchById(id, data)
-            .throwIfNotFound({ message: 'Match not found!' })
+            .throwIfNotFound({ message: 'RequstPlayer not found!' })
             .then((result) => res.json(result))
             await trx.commit()
         } catch (err) {
             // Delete file
             if (img) {
-                const img_path = path.resolve(UPLOADS_PATH, 'Matchs', img.filename)
+                const img_path = path.resolve(UPLOADS_PATH, 'RequstPlayers', img.filename)
                 await unlink(img_path);
 
                 console.log(`successfully deleted ${ img_path }`);
@@ -125,10 +121,10 @@ export const AdminMatchController = {
 
         const { id } = req.params
 console.log(id)
-        await Match
+        await RequstPlayer
             .query()
             .deleteById(id)
-            .throwIfNotFound({ message: 'Match not found!' })
+            .throwIfNotFound({ message: 'RequstPlayer not found!' })
             .returning('*')
             .then((result) => res.json(result))
             .catch(err => next(err))

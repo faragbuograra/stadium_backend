@@ -13,7 +13,7 @@ export const PublicStadiumController = {
 
         let query = Stadium.query()
         // add where status = true
-        query.where('status', true)
+        query.where('status', 'true')
 
         return await UtilDatabase
             .finder(Stadium, req.query, query)

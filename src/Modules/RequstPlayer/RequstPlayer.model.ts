@@ -3,24 +3,30 @@ import Objection, { Model, QueryBuilderType } from 'objection'
 import { DOMAIN }                             from "../../config"
 
 import { TimestampedModel }                   from '../Shared/TimestampedModel'
-import Department from '../Department/department.model'
 import { User } from '../Users/user.model'
-import Order_procurement from '../Order_procurement/order_procurement.model'
+import Stadium from '../stadium/stadium.model'
+import { match } from 'node:assert'
+import Match from '../Match/match.model'
 
-export default class Order extends TimestampedModel {
+export default class RequstPlayer extends TimestampedModel {
 
     // Table name
-    static tableName = 'order'
+    static tableName = 'requst_player'
     static defaultSort = 'name'
 
     // Table columns
     id!: number
-    name!: string 
+    name!: string | null
     status!:boolean | string
+    user_id!: number
+    stadium_id!: number
+    match_id!: number
+    number_of_players!: number
+    
 
     static jsonSchema = {
         type: 'object',
-       
+   
       
     }
 
@@ -36,35 +42,27 @@ export default class Order extends TimestampedModel {
     // One-to-many relation with Subcategory model
     static relationMappings = {
     
-        // Departments: {
-        //     relation: Model.HasManyRelation,
-        //     modelClass: Department,
-        //     join: {
-        //         from: 'management.id',
-        //         to: 'department.management_id'
-        //     },
-        //     filter: (qb: QueryBuilderType<Department>) => qb.select('department.id','department.name')
-        // },
         user: {
             relation: Model.HasOneRelation,
             modelClass: User,
             join: {
-                from: 'order.user_id',
+                from: 'requst_player.user_id',
                 to: 'user.id' 
             },
-            filter: (qb: QueryBuilderType<User>) => qb.select('user.name',
-            'user.id',
-            )
+            filter: (qb: QueryBuilderType<User>) => qb.select('user.name')
         },
-        Order_procurement: {
-            relation: Model.HasManyRelation,
-            modelClass: Order_procurement,
+        match: {
+            relation: Model.HasOneRelation,
+            modelClass: Match,
             join: {
-                from: 'order.id',
-                to: 'order_procurement.order_id'  
+                from: 'requst_player.stadium_id',
+                to: 'stadium.id' 
             },
-           
+            filter: (qb: QueryBuilderType<Match>) => qb.select('stadium.name')
         },
+       
+       
+       
 
 
     

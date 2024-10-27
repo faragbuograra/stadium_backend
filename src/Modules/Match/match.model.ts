@@ -19,10 +19,8 @@ export default class Match extends TimestampedModel {
 
     static jsonSchema = {
         type: 'object',
-        required: [ 'name' ],
-        properties: {
-            name: { type: 'string', minLength: 1 }
-        }
+   
+      
     }
 
     // Formats img and thumb fields when existing model value returns from database
