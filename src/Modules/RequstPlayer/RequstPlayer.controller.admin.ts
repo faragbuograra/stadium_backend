@@ -11,7 +11,7 @@ export const AdminRequstPlayerController = {
     index: async (req: Request, res: Response, next: NextFunction) => {
 
         let query = RequstPlayer.query()
-        .withGraphFetched('[user,stadium]') 
+        .withGraphFetched('[user,match]') 
         return await UtilDatabase
             .finder(RequstPlayer, req.query, query)
             
@@ -23,7 +23,7 @@ export const AdminRequstPlayerController = {
 
         let query = RequstPlayer.query()
         .where('user_id', req.user.id)
-        .withGraphFetched('[user,stadium]') 
+        // .withGraphFetched('[user,stadium]') 
         return await UtilDatabase
             .finder(RequstPlayer, req.query, query)
             

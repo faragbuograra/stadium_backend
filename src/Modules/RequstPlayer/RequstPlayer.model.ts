@@ -55,10 +55,10 @@ export default class RequstPlayer extends TimestampedModel {
             relation: Model.HasOneRelation,
             modelClass: Match,
             join: {
-                from: 'requst_player.stadium_id',
-                to: 'stadium.id' 
+                from: 'requst_player.match_id',
+                to: 'match.id' 
             },
-            filter: (qb: QueryBuilderType<Match>) => qb.select('stadium.name')
+            filter: (qb: QueryBuilderType<Match>) => qb.select('match.*')
         },
        
        
