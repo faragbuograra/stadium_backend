@@ -26,7 +26,7 @@ export const AdminUserController = {
   },
   MStadium: async (req: Request, res: Response, next: NextFunction) => {
     let query = User.query()
-    .where('role', 'mstadium')
+    .where('role', 'stadium')
 
     return await UtilDatabase.finder(User, req.query, query)
       .then((results) => res.json(results))

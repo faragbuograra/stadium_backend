@@ -22,6 +22,7 @@ import { AdminMatchRoutes } from "../Modules/Match/match.routes";
 import { AdminTypeRoutes } from "../Modules/Types/type.routes";
 import { AdminStadiumRoutes, PublicStadiumRoutes } from "../Modules/stadium/stadium.routes";
 import { AdminRequstPlayerRoutes } from "../Modules/RequstPlayer/RequstPlayer.routes";
+import { AdminRegisterPlayerRoutes } from "../Modules/RegisterPlayer/RegisterPlayer.routes";
 
 // import { AdminLogRoutes } from "../Modules/log/Log.routes";
 
@@ -97,7 +98,7 @@ export const applyRoutes = (): Router => {
   AdminMatchRoutes(router, admin_prefix)
   AdminRequstPlayerRoutes(router, admin_prefix)
   AdminUserRoutes(router, admin_prefix);
-
+  AdminRegisterPlayerRoutes(router, admin_prefix);
   router.get(`${admin_prefix}/statistics`, GetStatics);
   /**
    * ------------------------------------------------------------------------------

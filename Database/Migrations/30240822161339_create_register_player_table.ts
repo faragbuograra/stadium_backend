@@ -10,9 +10,7 @@ export async function up(knex: Knex): Promise<void> {
         .references('id').inTable('user')
         table.integer('requst_player_id').references('id').
         inTable('requst_player')
-        
-        table.string('ip').nullable()
-        table.string('note').nullable()
+      
         table.timestamp('created_at', { useTz: false }).defaultTo(knex.raw('now()')).notNullable()
         table.timestamp('updated_at', { useTz: false }).defaultTo(knex.raw('now()')).notNullable()
     })
