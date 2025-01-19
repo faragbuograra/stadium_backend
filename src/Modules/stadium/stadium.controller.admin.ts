@@ -9,20 +9,27 @@ export const AdminStadiumController = {
 
     //index
     index: async (req: Request, res: Response, next: NextFunction) => {
-
+if(req.user.role=='admin'){
         let query = Stadium.query()
 
         return await UtilDatabase
             .finder(Stadium, req.query, query)
             .then((results) => res.json(results))
             .catch(err => next(err))
+}else{
+    let query = Stadium.query()
+    .where('user_id', req.user.id)
 
-    },
+    return await UtilDatabase
+        .finder(Stadium, req.query, query)
+        .then((results) => res.json(results))
+        .catch(err => next(err))
+    };
+},
     store: async (req: Request, res: Response, next: NextFunction) => {
 
         const data = req.body
-        const img  = req.file
-     
+       
         const trx = await Stadium.startTransaction()
 
         try {
@@ -30,7 +37,9 @@ export const AdminStadiumController = {
 
         
           data.status=true
+          if(req.user.role=='stadium'){
           data.user_id=req.user.id
+            }
             await Stadium
                 .query(trx)
                 .insert(data)

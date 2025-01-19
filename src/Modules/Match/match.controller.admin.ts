@@ -20,7 +20,7 @@ export const AdminMatchController = {
 
     },
     me: async (req: Request, res: Response, next: NextFunction) => {
-
+if(req.user.role=='player'){
         let query = Match.query()
         .where('user_id', req.user.id)
         .withGraphFetched('[user,stadium]') 
@@ -29,8 +29,19 @@ export const AdminMatchController = {
             
             .then((results) => res.json(results))
             .catch(err => next(err))
+}else{
+  let query = Match.query()
+  .join('stadium', 'stadium.id', 'match.stadium_id') // Explicitly join the stadium table
+  .where('stadium.user_id', req.user.id) // Filter by stadium.user_id
+  .withGraphFetched('[user, stadium]'); // Fetch related data
 
-    },
+// Use a utility function to handle additional query options (e.g., pagination)
+const results = await UtilDatabase.finder(Match, req.query, query);
+
+// Send the results as JSON
+res.json(results);
+    };
+  },
     store: async (req: Request, res: Response, next: NextFunction) => {
         const data = req.body;
         const trx = await Match.startTransaction();
