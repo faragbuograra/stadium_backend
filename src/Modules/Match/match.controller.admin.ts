@@ -5,6 +5,8 @@ import Match                               from './match.model'
 import { unlink }                          from 'node:fs/promises';
 import { UtilDatabase }                    from '../../Utils/finder'
 import { isBefore, parseISO } from 'date-fns';
+import { User } from '../Users/user.model';
+import Stadium from '../stadium/stadium.model';
 export const AdminMatchController = {
 
     //index
@@ -69,6 +71,21 @@ res.json(results);
           return res.status(400).json({
             message: 'يوجد مباراة محجوزة في نفس اليوم والوقت في هذا الملعب. يرجى اختيار موعد آخر.',
           });
+        }
+        const user = await User.query(trx).findById(data.user_id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'المستخدم غير موجود.',
+            });
+        }
+console.log(user.balance)
+const matchPrice = Stadium.query(trx).findById(data.stadium_id).select('balance').first();
+        // التحقق من أن رصيد اللاعب يساوي قيمة الحجز
+        if (user.balance !== data.balance) {
+            return res.status(400).json({
+                message: 'الرصيد غير كافٍ لإتمام الحجز.',
+            });
         }
           // إدراج البيانات في قاعدة البيانات
           const result = await Match.query(trx).insert(data);
